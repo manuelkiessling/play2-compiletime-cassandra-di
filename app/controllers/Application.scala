@@ -8,7 +8,8 @@ import repositories.Repository
 class Application(productsRepository: Repository[ProductModel, Int]) extends Controller {
 
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    val product = productsRepository.getOneById(1)
+    Ok(views.html.index(s"Your new application is ready. The name of product #1 is ${product.name}."))
   }
 
 }
