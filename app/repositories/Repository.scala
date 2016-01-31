@@ -1,5 +1,5 @@
 package repositories
 
-abstract trait Repository[M, I] {
+trait Repository[M, I] {
   def getOneById(id: I): M
 }
