@@ -14,6 +14,20 @@ trait CassandraRepositoryComponents {
   def configuration: Configuration
   def applicationLifecycle: ApplicationLifecycle
 
+  /*
+
+  It's important to make these vals lazy - if not, they get initialized in any case when
+  running the code - but that's not welcome in certain scenarios.
+
+  E.g., in ApplicationSpec, we create a FakeApplicationComponents which extends AppComponents,
+  and therefore this trait. Within FakeApplicationComponents, we override productsRepository,
+  replacing the actual thing with a mock, thus not needing an actual database.
+
+  However, if these vals would not be lazy, they would be evaluated even though productsRepository
+  will be overridden with a mock eventually - and thus, a database connection would be tried although
+  it's not needed.
+
+   */
   lazy private val cassandraSession: Session = {
     val uriString = environment.mode match {
       case Mode.Prod  => "cassandra://localhost:9042/prod"
